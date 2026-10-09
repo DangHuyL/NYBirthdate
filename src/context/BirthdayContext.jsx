@@ -28,7 +28,14 @@ export const BirthdayProvider = ({ children }) => {
       try {
         const savedConfig = await getUserConfig();
         if (savedConfig) {
-          setConfig(savedConfig);
+          // Preserve any custom user uploaded media alongside master default gallery
+          const customUserUploads = (savedConfig.memoriesGallery || []).filter(item => item.id && String(item.id).startsWith('user_'));
+          
+          setConfig({
+            ...defaultBirthdayConfig,
+            ...savedConfig,
+            memoriesGallery: [...customUserUploads, ...defaultBirthdayConfig.memoriesGallery]
+          });
         }
         // Check for custom stored audio
         const audioBlob = await getMediaFile('bg_music');
