@@ -1,18 +1,64 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useBirthday } from '../context/BirthdayContext';
 import { X, Calendar, Heart, Video, Image as ImageIcon } from 'lucide-react';
 
 export const PhotoLightbox = () => {
-  const { selectedPhoto, setSelectedPhoto } = useBirthday();
+  const {
+    selectedPhoto,
+    setSelectedPhoto,
+    isPlayingMusic,
+    playMusic,
+    pauseMusic
+  } = useBirthday();
+
+  const wasPlayingBeforeVideoRef = useRef(false);
+
+  useEffect(() => {
+    if (!selectedPhoto) return;
+
+    if (selectedPhoto.type === 'video') {
+      // Store whether music was active before video opened
+      wasPlayingBeforeVideoRef.current = isPlayingMusic;
+      
+      // Pause background audio when video modal opens
+      if (isPlayingMusic) {
+        pauseMusic();
+      }
+
+      return () => {
+        // When video modal closes or unmounts, resume background music
+        if (wasPlayingBeforeVideoRef.current) {
+          playMusic();
+        }
+      };
+    }
+  }, [selectedPhoto]);
 
   if (!selectedPhoto) return null;
 
   const isVideo = selectedPhoto.type === 'video';
 
+  const handleClose = () => {
+    setSelectedPhoto(null);
+    if (wasPlayingBeforeVideoRef.current) {
+      playMusic();
+    }
+  };
+
+  const handleVideoPlay = () => {
+    pauseMusic();
+  };
+
+  const handleVideoPauseOrEnd = () => {
+    if (wasPlayingBeforeVideoRef.current) {
+      playMusic();
+    }
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 bg-black/90 backdrop-blur-lg flex items-center justify-center p-4 animate-in fade-in duration-300"
-      onClick={() => setSelectedPhoto(null)}
+      onClick={handleClose}
     >
       <div
         className="relative max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-3xl p-4 md:p-6 shadow-2xl overflow-hidden"
@@ -20,7 +66,7 @@ export const PhotoLightbox = () => {
       >
         {/* Close Button */}
         <button
-          onClick={() => setSelectedPhoto(null)}
+          onClick={handleClose}
           className="absolute top-4 right-4 z-10 p-2.5 bg-slate-800/80 hover:bg-rose-500 text-slate-300 hover:text-white rounded-full transition-all shadow-lg"
         >
           <X size={20} />
@@ -34,6 +80,10 @@ export const PhotoLightbox = () => {
                 src={selectedPhoto.url}
                 controls
                 autoPlay
+                playsInline
+                onPlay={handleVideoPlay}
+                onPause={handleVideoPauseOrEnd}
+                onEnded={handleVideoPauseOrEnd}
                 className="max-h-[65vh] w-auto max-w-full rounded-xl shadow-lg"
               />
             ) : (
@@ -50,7 +100,7 @@ export const PhotoLightbox = () => {
             <div className="flex items-center gap-1.5 text-xs text-rose-400 font-semibold tracking-wide uppercase bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
               {isVideo ? <Video size={12} /> : <ImageIcon size={12} />}
               <Calendar size={12} />
-              <span>{selectedPhoto.date || 'Kỷ niệm ngọt ngào của Kiều Loan'}</span>
+              <span>{selectedPhoto.date || 'Kỷ niệm ngọt ngào'}</span>
             </div>
 
             <h3 className="font-serif-title text-xl md:text-2xl font-bold text-rose-100">
