@@ -80,16 +80,16 @@ export const Chapter1_Entrance = () => {
         </motion.div>
 
         {/* Action Button */}
-        <div className="space-y-3">
+        <div className="w-full flex flex-col items-center justify-center space-y-3">
           <button
             onClick={handleOpenGift}
-            className="relative group px-8 py-4 bg-gradient-to-r from-rose-500 via-pink-500 to-amber-400 text-white rounded-full font-bold text-base md:text-lg shadow-xl shadow-rose-500/30 hover:shadow-rose-500/50 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+            className="relative group px-8 py-4 bg-gradient-to-r from-rose-500 via-pink-500 to-amber-400 text-white rounded-full font-bold text-base md:text-lg shadow-xl shadow-rose-500/30 hover:shadow-rose-500/50 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 mx-auto"
           >
             <LockOpen className="w-5 h-5 text-rose-100" />
             <span>{config.entrance.buttonText || "Mở món quà nhé 💖"}</span>
           </button>
 
-          <p className="text-xs text-slate-400/90 flex items-center justify-center gap-1.5 font-medium">
+          <p className="text-xs text-slate-400/90 flex items-center justify-center gap-1.5 font-medium text-center">
             <Music size={13} className="text-rose-400" />
             <span>{config.entrance.hint || "Có một điều anh muốn dành riêng cho em."}</span>
           </p>
