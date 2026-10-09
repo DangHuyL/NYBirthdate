@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useBirthday } from '../context/BirthdayContext';
-import { Mail, RotateCcw, ArrowRight, Heart, Sparkles } from 'lucide-react';
+import { Mail, RotateCcw, Heart, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const Chapter6_LoveLetter = () => {
   const { config, resetJourney } = useBirthday();
   const letterText = config.loveLetter.content || '';
 
+  const [replayKey, setReplayKey] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [isTypingComplete, setIsTypingComplete] = useState(false);
 
@@ -16,9 +17,9 @@ export const Chapter6_LoveLetter = () => {
     setIsTypingComplete(false);
 
     const timer = setInterval(() => {
-      if (index < letterText.length) {
-        setDisplayedText((prev) => prev + letterText.charAt(index));
-        index++;
+      index++;
+      if (index <= letterText.length) {
+        setDisplayedText(letterText.slice(0, index));
       } else {
         setIsTypingComplete(true);
         clearInterval(timer);
@@ -26,21 +27,10 @@ export const Chapter6_LoveLetter = () => {
     }, 35); // Smooth natural typing speed
 
     return () => clearInterval(timer);
-  }, [letterText]);
+  }, [letterText, replayKey]);
 
   const handleReplayLetter = () => {
-    setDisplayedText('');
-    setIsTypingComplete(false);
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index < letterText.length) {
-        setDisplayedText((prev) => prev + letterText.charAt(index));
-        index++;
-      } else {
-        setIsTypingComplete(true);
-        clearInterval(timer);
-      }
-    }, 35);
+    setReplayKey((prev) => prev + 1);
   };
 
   return (
