@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useBirthday } from '../context/BirthdayContext';
-import { Camera, Plus, Trash2, ArrowRight, Video, Calendar, Eye, Play } from 'lucide-react';
+import { Camera, Plus, ArrowRight, Video, Calendar, Eye, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const Chapter3_Memories = () => {
@@ -143,14 +143,6 @@ export const Chapter3_Memories = () => {
                 </div>
               </div>
 
-              {/* Delete button option */}
-              <button
-                onClick={() => deletePhoto(item.id)}
-                className="absolute top-2 right-2 p-1.5 bg-slate-900/80 hover:bg-rose-600 text-slate-400 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-md"
-                title="Xóa mục này"
-              >
-                <Trash2 size={13} />
-              </button>
             </motion.div>
           );
         })}
